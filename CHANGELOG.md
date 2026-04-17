@@ -1,15 +1,103 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [v0.5.0](https://github.com/senara-solutions/mika/releases/tag/v0.5.0) — 2026-04-03
+## [v0.5.0](https://github.com/senara-solutions/mika/releases/tag/v0.5.0) — 2026-04-17
 
 ### Added
 
 - *(tui)* skill visibility and /clear cleanup (#415)
+- GitHub App identity and agent infrastructure (#423) (#426)
+- *(gateway)* multi-tenant GitHub webhook routing with agent_mapping (#433)
+- *(cli)* add --format flag to mika agents list (#435)
+- *(dashboard)* link sessions to tasks with bidirectional navigation (#437)
+- *(dashboard)* rebuild Dev Run detail page with narrative content (#439)
+- add compound doc check to verify-pipeline.sh (#440)
+- *(cli)* add mika agents validate and mika teams validate commands (#443)
+- [#446] add mika provider and mika model CLI subcommands (#450)
+- add --format text|json flag to 9 CLI commands (#448)
+- *(skills)* built-in skill-review skill for model-tuned prompt variants (#455)
+- *(skills)* add GitHub App auth to skill install git clone (#461)
+- *(skills)* per-agent LLM override via DB + unblock linked skill review (#475)
+- *(observability)* record resolved prompt variant on llm_calls (#481) (#503)
+- *(skills)* skill system quality — remove [llm] from skill.toml, forbid name in keywords, validate markdown (#522)
+- *(tui)* silence internal dev questions in TUI inbox mode (#494) (#552)
+- *(agent)* structural pull_request_review verdict handler (#524) (#555)
+- add dispatch-readiness guard on execute_long_running (#525) (#556)
+- *(skills)* validate skills at agent startup, not just on explicit validate command (#530) (#559)
+- *(tools)* validate UUID-typed arguments at tool boundary (#563)
+- *(gateway)* route pull_request.closed webhook to mika-dev (#564)
+- *(server)* add webhook deferral queue for callback sequencing (#528) (#565)
+- *(skills)* prevent reviewed skill from being triggered during its own review (#513) (#573)
+- *(tools)* report skipped skill count in list_skills output (#334) (#575)
+- *(tools)* list_work_items returns status-count summary + filter guidance (#585)
+- *(server)* structural check_suite.completed(success) handler (#571) (#587)
+- *(agent)* add tasks.type column and create_work_item support (#595) (#597)
+- bundle 11 engine-coupled skills + fix run_claude_pilot task_id fabrication (#601)
+- *(self-dev)* add milestone and project workflow branches (#603)
+- *(skills)* migrate 3 more engine-coupled skills into skills/bundled/ (#604)
+- *(skills)* migrate resolve-pr-conflicts and self-check (completes #604 scope) (#605)
+
+### Changed
+
+- split CLAUDE.md into hierarchical per-crate context files (#544)
+- *(agent)* source bundled skills from skills/bundled/ at build time (#600)
+
+### Documentation
+
+- relocate skill-review rename plan + cross-repo drift solution from mika-skills#102
+- *(adr)* add ADR-008 — GitHub identity separation (#521)
+- plan and compound for webhook QA pass entry point (#553) (#554)
+- compound — lazy PG pool in tests blocks 30s on CI but RST-fails fast locally (#599)
 
 ### Fixed
 
 - *(ci)* add git identity for release tag creation
+- add method and path to request error/warn logs (#417)
+- surface method/path as top-level JSON log fields, add /version endpoint (#421)
+- load per-agent .env for token and credential-helper commands (#427) (#428)
+- *(tui)* stop polling /api/v1/dashboard/status every 5s (#429)
+- load per-agent .env before constructing Settings (#430) (#432)
+- *(tui)* add background task running indicator to footer (#431) (#434)
+- /provider and /model commands leave broken config state (#444)
+- extract XML tool calls from text responses (#447) (#449)
+- provider switch propagates to agent worker with provider prefix (#451) (#452)
+- tolerate malformed closing tags in strip_internal_tags (#453) (#454)
+- gitignore dashboard/dist to prevent dirty repo after deploy (#456)
+- *(tui)* prevent cleared messages from reappearing after /clear
+- *(cli)* normalize MODEL_ALIASES to include provider prefix (#460)
+- *(skills)* filter resolve_skill_llm_override by MatchReason::Keyword only (#465)
+- *(skills)* harden review_skill / write_skill_variant (#470)
+- *(skills)* merge write_skill_variant into review_skill (#477) (#478)
+- *(skills)* block review_skill from reviewing built-in skills (#482)
+- *(agent)* enforce work-item state transition on completion claims (#483) (#484)
+- *(work-items)* shallow-merge metadata one level deep (#489) (#491)
+- *(tools)* add pr_merge_with_gate CI gate tool (#490) (#493)
+- *(tools)* accept 'reason' as alias for 'reasoning' in update_core_memory (#495)
+- *(mika-gateway)* add webhook observability and QA verdict contract (#487) (#498)
+- *(skills)* fix skill-review tool registration and add trust-critical tier (#499) (#500)
+- *(llm)* parse cache token usage from OpenAI-compatible provider responses (#479) (#502)
+- *(skills)* check for [skill] section before flagging as legacy format (#508)
+- *(server)* generate embeddings during startup backfill (#389) (#509)
+- *(skills)* harden skill-review prompt to enforce full inspect→persist→verify cycle (#518)
+- *(skills)* inject GH_TOKEN into exec handler child processes (#515 #517) (#520)
+- *(agent)* filter required_tools gate against available tool registry (#523)
+- *(config)* prefer machine user PAT over GitHub App installation token
+- *(openapi)* register handle_task_complete in OpenAPI spec paths (#328) (#538)
+- *(agent)* add fabricated action-claim guard (#308) (#543)
+- *(skills)* refuse long-running tools when no long_running_ctx available (#537) (#551)
+- *(investigate)* handle empty LLM response and fix lock race (#558)
+- remove redundant skill names from trigger keywords in builtins
+- *(skills)* canonicalize both paths in handler symlink containment check (#560)
+- *(skills)* suppress required_tools warning for dependency-provided tools
+- *(server)* use per-agent token in verdict handler (#561) (#562)
+- *(agent)* allow exec/http skills in callback silent turns (#568)
+- *(tui)* tag mika-ask relay messages as internal (#557) (#570)
+- *(skills)* prevent webhook handlers from dispatching unrelated backlog work (#583) (#586)
+- *(tools)* reject retry metadata writes during active dispatch (#579) (#588)
+- resolve skill dependencies in callback_safe_skills (#578) (#591)
+- *(agent)* dedup identical tool_use blocks within a single turn (#582) (#607)
+- *(agent)* surface gateway non-2xx responses as send_message tool errors (#581) (#612)
+- *(gateway)* prevent GitHub webhook from poisoning Telegram chat_id (#580) (#618)
 ## [v0.4.0](https://github.com/senara-solutions/mika/releases/tag/v0.4.0) — 2026-04-03
 
 ### Added
